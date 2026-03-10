@@ -1,0 +1,5 @@
+# api.php rimosso: rewrite disattivato
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /server/
+</IfModule>
