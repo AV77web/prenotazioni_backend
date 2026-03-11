@@ -1,5 +1,17 @@
-# api.php rimosso: rewrite disattivato
+# CORS: fallback per risposte non gestite da PHP; le richieste API usano l’origin dinamico in index.php
+<IfModule mod_headers.c>
+    Header set Access-Control-Allow-Origin "http://localhost:5179"
+    Header set Access-Control-Allow-Credentials "true"
+    Header set Access-Control-Allow-Headers "Content-Type"
+    Header set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+</IfModule>
+
+# Inoltra tutte le richieste non-file a index.php (Docker: DocumentRoot è questa cartella, quindi base /)
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /server/
+    RewriteBase /
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php/$1 [QSA,L]
 </IfModule>

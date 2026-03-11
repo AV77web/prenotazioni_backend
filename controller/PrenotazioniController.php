@@ -97,6 +97,46 @@ class PrenotazioniController {
     
         echo json_encode(["deleted"=>true]);
     }
+
+    /**
+     * Endpoint pubblico per verificare una prenotazione tramite codice.
+     * GET /verifica-prenotazione?codice=XXXXX
+     * Restituisce: data, orario, campo, stato prenotazione.
+     */
+    public function verificaPrenotazionePerCodice(string $codice): void
+    {
+        header('Content-Type: application/json');
+
+        if ($codice === '') {
+            http_response_code(400);
+            echo json_encode(['error' => 'Codice prenotazione mancante']);
+            return;
+        }
+
+        // Adatta i nomi di tabella/campi se diversi nel tuo schema
+        $sql = "SELECT 
+                    p.Data      AS data,
+                    p.OraInizio AS orario,
+                    c.NomeCampo AS campo,
+                    p.Stato     AS stato
+                FROM Prenotazione p
+                JOIN Campo c ON p.CampoID = c.CampoID
+                WHERE p.CodicePrenotazione = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('s', $codice);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        if (!$row) {
+            http_response_code(404);
+            echo json_encode(['error' => 'Prenotazione non trovata']);
+            return;
+        }
+
+        echo json_encode($row);
+    }
     
 }
 ?>
