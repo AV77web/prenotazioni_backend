@@ -6,9 +6,15 @@
 require "include/connect-db.php";
 
 $result = mysqli_query($db,"
-    SELECT CampoID, Nome, Tipo, Coperto, PrezzoOrario, Attivo
-    From CampoSportivo
-    order by CampoID asc
+    SELECT 
+        CampoID, 
+        Nome, 
+        Tipo, 
+        CASE WHEN Coperto = 1 THEN 'SI' ELSE 'NO' END AS Coperto,
+        PrezzoOrario, 
+        CASE WHEN Attivo = 1 THEN 'SI' ELSE 'NO' END AS Attivo
+    FROM CampoSportivo
+    ORDER BY CampoID ASC
 ");
 
 $output = [];

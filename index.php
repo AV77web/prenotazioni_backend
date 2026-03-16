@@ -21,10 +21,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 $pathInfo = $_SERVER['PATH_INFO'] ?? '';
 if ($pathInfo === '' && !empty($_SERVER['REQUEST_URI'])) {
     $pathInfo = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-    $base = '/server';
-    if ($base !== '' && strpos($pathInfo, $base) === 0) {
-        $pathInfo = substr($pathInfo, strlen($base));
-    }
+    $pathInfo = $pathInfo ?: '/';
+}
+// Rimuovi sempre il prefisso /server (Apache passa PATH_INFO = /server/clienti, non solo REQUEST_URI)
+$base = '/server';
+if ($base !== '' && strpos($pathInfo, $base) === 0) {
+    $pathInfo = substr($pathInfo, strlen($base));
     $pathInfo = $pathInfo ?: '/';
 }
 $uri      = explode('/', trim($pathInfo, '/'));

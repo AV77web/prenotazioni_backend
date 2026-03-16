@@ -12,7 +12,14 @@ class CampiController {
 
     public function getAll() {
         
-        $sql = "SELECT * FROM CampoSportivo";
+        $sql = "SELECT 
+                    CampoID,
+                    Nome,
+                    Tipo,
+                    CASE WHEN Coperto = 1 THEN 'SI' ELSE 'NO' END AS Coperto,
+                    PrezzoOrario,
+                    CASE WHEN Attivo = 1 THEN 'SI' ELSE 'NO' END AS Attivo
+                FROM CampoSportivo";
         $result = $this->conn->query($sql);
 
         $data = [];
@@ -29,7 +36,15 @@ class CampiController {
     public function getById($id){
 
         $stmt = $this->conn->prepare(
-            "SELECT * FROM CampoSportivo WHERE CampoID=?"
+            "SELECT 
+                CampoID,
+                Nome,
+                Tipo,
+                CASE WHEN Coperto = 1 THEN 'SI' ELSE 'NO' END AS Coperto,
+                PrezzoOrario,
+                CASE WHEN Attivo = 1 THEN 'SI' ELSE 'NO' END AS Attivo
+             FROM CampoSportivo 
+             WHERE CampoID=?"
         );
 
         $stmt->bind_param("i",$id);

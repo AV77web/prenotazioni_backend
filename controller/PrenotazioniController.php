@@ -12,7 +12,19 @@ class PrenotazioniController {
 
     public function getAll() {
 
-        $sql="SELECT * FROM Prenotazione";
+        $sql = "SELECT 
+                    p.Data,
+                    p.OraInizio,
+                    p.OraFine,
+                    p.Stato,
+                    p.CodicePrenotazione,
+                    cl.Nome,
+                    cl.Cognome,
+                    cp.Nome AS NomeCampo
+                FROM Prenotazione p
+                JOIN Cliente cl ON cl.ClienteID = p.ClienteID
+                JOIN CampoSportivo cp ON cp.CampoID = p.CampoID";
+
         $result = $this->conn->query($sql);
 
         $data = [];
